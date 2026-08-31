@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú de Sushi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #d32f2f;
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #111;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .precio {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #d32f2f;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍣 Menú de Sushi</h1>
+        <table>
+            <thead>
+                
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="sushi : ${platillos}">
+                    <td th:text="${sushi.nombre}" style="font-weight: 600;"></td>
+                    <td th:text="${sushi.descripcion}"></td>
+                    <td th:text="${'$' + sushi.precio}" class="precio"></td>
+                    <td>
+    <a th:href="@{/menu/editar/{id}(id=${sushi.id})}" 
+       style="color: #0288d1; font-weight: bold; text-decoration: none; margin-right: 10px;">
+       ✏️ Editar
+    </a>
+    <a th:href="@{/menu/eliminar/{id}(id=${sushi.id})}" 
+       style="color: #d32f2f; font-weight: bold; text-decoration: none;"
+       onclick="return confirm('¿Seguro que deseas eliminar este roll?')">
+       🗑️ Eliminar
+    </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2>➕ Agregar Nuevo Roll</h2>
+        <form th:action="@{/menu/guardar}" th:object="${nuevoSushi}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <div class="form-group">
+                <label>Nombre del Sushi:</label>
+                <input type="text" th:field="*{nombre}" required placeholder="Ej: Dragon Roll">
+            </div>
+            <div class="form-group">
+                <label>Descripción:</label>
+                <input type="text" th:field="*{descripcion}" required placeholder="Ej: Salmón, palta y salsa unagi">
+            </div>
+            <div class="form-group">
+                <label>Precio:</label>
+                <input type="number" step="0.01" th:field="*{precio}" required placeholder="14.50">
+            </div>
+            <button type="submit">Guardar Sushi</button>
+        </form>
+    </div>
+</body>
+</html>
